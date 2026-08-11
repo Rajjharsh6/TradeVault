@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% block title %}Add Trade - TradeVault{% endblock %}
+{% block page_title %}Add Trade{% endblock %}
+{% block content %}
+
+<div class="panel">
+    <form method="POST" action="{{ url_for('add_trade') }}" class="trade-form">
+        <div class="form-section-title">Trade Details</div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="trade_date">Trade Date *</label>
+                <input type="date" id="trade_date" name="trade_date" value="{{ form_data.trade_date or '' }}" required>
+            </div>
+            <div class="form-group">
+                <label for="symbol">Symbol *</label>
+                <input type="text" id="symbol" name="symbol" placeholder="e.g. XAUUSD" value="{{ form_data.symbol or '' }}" required>
+            </div>
+            <div class="form-group">
+                <label for="direction">Direction *</label>
+                <select id="direction" name="direction" required>
+                    <option value="">Select</option>
+                    <option value="Long" {% if form_data.direction == 'Long' %}selected{% endif %}>Long</option>
+                    <option value="Short" {% if form_data.direction == 'Short' %}selected{% endif %}>Short</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="result">Trade Result *</label>
+                <select id="result" name="result" required>
+                    <option value="">Select</option>
+                    <option value="Win" {% if form_data.result == 'Win' %}selected{% endif %}>Win</option>
+                    <option value="Loss" {% if form_data.result == 'Loss' %}selected{% endif %}>Loss</option>
+                    <option value="Breakeven" {% if form_data.result == 'Breakeven' %}selected{% endif %}>Breakeven</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-section-title">Price Levels</div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="entry_price">Entry Price *</label>
+                <input type="number" step="any" id="entry_price" name="entry_price" value="{{ form_data.entry_price or '' }}" required>
+            </div>
+            <div class="form-group">
+                <label for="exit_price">Exit Price</label>
+                <input type="number" step="any" id="exit_price" name="exit_price" value="{{ form_data.exit_price or '' }}">
+            </div>
+            <div class="form-group">
+                <label for="stop_loss">Stop Loss</label>
+                <input type="number" step="any" id="stop_loss" name="stop_loss" value="{{ form_data.stop_loss or '' }}">
+            </div>
+            <div class="form-group">
+                <label for="take_profit">Take Profit</label>
+                <input type="number" step="any" id="take_profit" name="take_profit" value="{{ form_data.take_profit or '' }}">
+            </div>
+            <div class="form-group">
+                <label for="lot_size">Lot Size</label>
+                <input type="number" step="any" id="lot_size" name="lot_size" value="{{ form_data.lot_size or '' }}">
+            </div>
+            <div class="form-group">
+                <label for="risk_percent">Risk %</label>
+                <input type="number" step="any" id="risk_percent" name="risk_percent" value="{{ form_data.risk_percent or '' }}">
+            </div>
+            <div class="form-group">
+                <label for="profit_loss">Profit / Loss *</label>
+                <input type="number" step="any" id="profit_loss" name="profit_loss" value="{{ form_data.profit_loss or '' }}" required>
+            </div>
+        </div>
+
+        <div class="form-section-title">Context</div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="strategy">Strategy</label>
+                <input type="text" id="strategy" name="strategy" placeholder="e.g. ICT Order Block" value="{{ form_data.strategy or '' }}">
+            </div>
+            <div class="form-group">
+                <label for="session">Session</label>
+                <select id="session" name="session">
+                    <option value="">Select</option>
+                    <option value="Asian" {% if form_data.session == 'Asian' %}selected{% endif %}>Asian</option>
+                    <option value="London" {% if form_data.session == 'London' %}selected{% endif %}>London</option>
+                    <option value="New York" {% if form_data.session == 'New York' %}selected{% endif %}>New York</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="timeframe">Timeframe</label>
+                <select id="timeframe" name="timeframe">
+                    <option value="">Select</option>
+                    <option value="1m">1m</option><option value="5m">5m</option>
+                    <option value="15m">15m</option><option value="1H">1H</option>
+                    <option value="4H">4H</option><option value="1D">1D</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="market_condition">Market Condition</label>
+                <select id="market_condition" name="market_condition">
+                    <option value="">Select</option>
+                    <option value="Trending">Trending</option>
+                    <option value="Ranging">Ranging</option>
+                    <option value="Volatile">Volatile</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-section-title">Notes</div>
+        <div class="form-grid form-grid-1">
+            <div class="form-group">
+                <label for="notes">Notes</label>
+                <textarea id="notes" name="notes" rows="3">{{ form_data.notes or '' }}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="mistakes">Mistakes</label>
+                <textarea id="mistakes" name="mistakes" rows="2">{{ form_data.mistakes or '' }}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="emotions">Emotions</label>
+                <input type="text" id="emotions" name="emotions" placeholder="e.g. Confident, Anxious" value="{{ form_data.emotions or '' }}">
+            </div>
+            <div class="form-group">
+                <label for="screenshot_url">Screenshot URL</label>
+                <input type="url" id="screenshot_url" name="screenshot_url" placeholder="https://..." value="{{ form_data.screenshot_url or '' }}">
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">Save Trade</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

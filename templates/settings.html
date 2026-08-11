@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Settings - TradeVault{% endblock %}
+{% block page_title %}Settings{% endblock %}
+{% block content %}
+
+<div class="panel">
+    <div class="form-section-title">Profile</div>
+    <div class="detail-grid">
+        <div class="detail-item"><span class="detail-label">Email</span><span>{{ user.email if user else "" }}</span></div>
+        <div class="detail-item"><span class="detail-label">User ID</span><span class="mono">{{ user.id if user else "" }}</span></div>
+    </div>
+
+    <form method="POST" action="{{ url_for('settings') }}" class="trade-form">
+        <div class="form-section-title">Trading Preferences</div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="default_currency">Default Currency</label>
+                <select id="default_currency" name="default_currency">
+                    {% for c in ['USD','EUR','GBP','INR','JPY'] %}
+                    <option value="{{ c }}" {% if profile.default_currency == c %}selected{% endif %}>{{ c }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="default_platform">Default Platform</label>
+                <select id="default_platform" name="default_platform">
+                    {% for p in ['MT4','MT5','TradingView','cTrader'] %}
+                    <option value="{{ p }}" {% if profile.default_platform == p %}selected{% endif %}>{{ p }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="default_timezone">Default Timezone</label>
+                <select id="default_timezone" name="default_timezone">
+                    {% for tz in ['UTC','IST','EST','GMT'] %}
+                    <option value="{{ tz }}" {% if profile.default_timezone == tz %}selected{% endif %}>{{ tz }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="default_risk_percent">Default Risk %</label>
+                <input type="number" step="any" id="default_risk_percent" name="default_risk_percent" value="{{ profile.default_risk_percent if profile.default_risk_percent is not none else 1.0 }}">
+            </div>
+        </div>
+
+        <div class="form-section-title">Appearance</div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="theme">Theme</label>
+                <select id="theme" name="theme">
+                    <option value="dark" {% if profile.theme == 'dark' or not profile.theme %}selected{% endif %}>Dark</option>
+                    <option value="light" {% if profile.theme == 'light' %}selected{% endif %}>Light</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Save Settings</button>
+        </div>
+    </form>
+
+    <div class="form-section-title">Account</div>
+    <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
+</div>
+
+{% endblock %}

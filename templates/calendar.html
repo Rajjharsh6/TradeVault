@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Calendar - TradeVault{% endblock %}
+{% block page_title %}Trading Calendar{% endblock %}
+{% block content %}
+
+<div class="panel">
+    <div class="calendar-nav">
+        <button class="btn btn-secondary btn-sm" id="calPrevMonth">&larr; Prev</button>
+        <h3 id="calMonthLabel"></h3>
+        <button class="btn btn-secondary btn-sm" id="calNextMonth">Next &rarr;</button>
+    </div>
+    <div class="calendar-grid" id="calendarGrid"></div>
+</div>
+
+<div class="panel" id="calendarDayPanel" style="display:none;">
+    <div class="panel-header">
+        <h3 id="calendarDayTitle">Trades</h3>
+    </div>
+    <div class="table-wrapper">
+        <table class="data-table">
+            <thead>
+                <tr><th>Symbol</th><th>Direction</th><th>Entry</th><th>Exit</th><th>P&amp;L</th><th>Result</th></tr>
+            </thead>
+            <tbody id="calendarDayTrades"></tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+window.CALENDAR_DATA = {{ calendar_data|tojson }};
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    if (window.TradeVaultCalendar) {
+        window.TradeVaultCalendar.init(window.CALENDAR_DATA);
+    }
+});
+</script>
+{% endblock %}

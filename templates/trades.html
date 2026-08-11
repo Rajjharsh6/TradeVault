@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Trade History - TradeVault{% endblock %}
+{% block page_title %}Trade History{% endblock %}
+{% block content %}
+
+<div class="panel">
+    <form method="GET" action="{{ url_for('trades') }}" class="filter-bar">
+        <input type="text" name="q" placeholder="Search symbol, strategy, notes..." value="{{ filters.q }}" class="filter-search">
+
+        <select name="symbol">
+            <option value="">All Symbols</option>
+            {% for s in symbols %}
+            <option value="{{ s }}" {% if filters.symbol == s %}selected{% endif %}>{{ s }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="direction">
+            <option value="">All Directions</option>
+            <option value="Long" {% if filters.direction == 'Long' %}selected{% endif %}>Long</option>
+            <option value="Short" {% if filters.direction == 'Short' %}selected{% endif %}>Short</option>
+        </select>
+
+        <select name="result">
+            <option value="">All Results</option>
+            <option value="Win" {% if filters.result == 'Win' %}selected{% endif %}>Win</option>
+            <option value="Loss" {% if filters.result == 'Loss' %}selected{% endif %}>Loss</option>
+            <option value="Breakeven" {% if filters.result == 'Breakeven' %}selected{% endif %}>Breakeven</option>
+        </select>
+
+        <input type="date" name="date_from" value="{{ filters.date_from }}">
+        <input type="date" name="date_to" value="{{ filters.date_to }}">
+
+        <select name="sort">
+            <option value="desc" {% if filters.sort == 'desc' %}selected{% endif %}>Newest First</option>
+            <option value="asc" {% if filters.sort == 'asc' %}selected{% endif %}>Oldest First</option>
+        </select>
+
+        <button type="submit" class="btn btn-primary btn-sm">Apply</button>
+        <a href="{{ url_for('trades') }}" class="btn btn-secondary btn-sm">Reset</a>
+    </form>
+
+    {% if trades %}
+    <div class="table-wrapper">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Date</th><th>Symbol</th><th>Direction</th><th>Entry</th><th>Exit</th>
+                    <th>Lot Size</th><th>P&amp;L</th><th>Result</th><th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in trades %}
+                <tr>
+                    <td>{{ t.trade_date }}</td>
+                    <td class="mono">{{ t.symbol }}</td>
+                    <td><span class="badge badge-{{ 'long' if t.direction == 'Long' else 'short' }}">{{ t.direction }}</span></td>
+                    <td class="mono">{{ t.entry_price }}</td>
+                    <td class="mono">{{ t.exit_price if t.exit_price is not none else '-' }}</td>
+                    <td class="mono">{{ t.lot_size if t.lot_size is not none else '-' }}</td>
+                    <td class="mono {{ 'pnl-positive' if (t.profit_loss or 0) >= 0 else 'pnl-negative' }}">{{ t.profit_loss }}</td>
+                    <td><span class="badge badge-{{ (t.result or '')|lower }}">{{ t.result }}</span></td>
+                    <td class="actions-cell">
+                        <a href="{{ url_for('view_trade', trade_id=t.id) }}" class="icon-btn" title="View">&#128065;</a>
+                        <a href="{{ url_for('edit_trade', trade_id=t.id) }}" class="icon-btn" title="Edit">&#9998;</a>
+                        <form method="POST" action="{{ url_for('delete_trade', trade_id=t.id) }}" class="inline-form" onsubmit="return confirm('Delete this trade? This cannot be undone.');">
+                            <button type="submit" class="icon-btn icon-btn-danger" title="Delete">&#128465;</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <p class="table-footnote">Showing {{ trades|length }} trade(s).</p>
+    {% else %}
+    <div class="empty-state">
+        <p>No trades match your filters.</p>
+        <a href="{{ url_for('add_trade') }}" class="btn btn-primary">Add Trade</a>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

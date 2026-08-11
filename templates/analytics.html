@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Analytics - TradeVault{% endblock %}
+{% block page_title %}Analytics{% endblock %}
+{% block content %}
+
+<div class="stats-grid stats-grid-dense">
+    <div class="stat-card"><span class="stat-label">Total Trades</span><span class="stat-value">{{ stats.total_trades }}</span></div>
+    <div class="stat-card"><span class="stat-label">Win Rate</span><span class="stat-value">{{ stats.win_rate }}%</span></div>
+    <div class="stat-card"><span class="stat-label">Net P&amp;L</span><span class="stat-value {{ 'pnl-positive' if stats.net_pnl >= 0 else 'pnl-negative' }}">{{ stats.net_pnl }}</span></div>
+    <div class="stat-card"><span class="stat-label">Profit Factor</span><span class="stat-value">{{ stats.profit_factor }}</span></div>
+    <div class="stat-card"><span class="stat-label">Average Win</span><span class="stat-value pnl-positive">{{ stats.avg_win }}</span></div>
+    <div class="stat-card"><span class="stat-label">Average Loss</span><span class="stat-value pnl-negative">{{ stats.avg_loss }}</span></div>
+    <div class="stat-card"><span class="stat-label">Best Trade</span><span class="stat-value pnl-positive">{{ stats.best_trade }}</span></div>
+    <div class="stat-card"><span class="stat-label">Worst Trade</span><span class="stat-value pnl-negative">{{ stats.worst_trade }}</span></div>
+    <div class="stat-card"><span class="stat-label">Max Win Streak</span><span class="stat-value">{{ stats.max_win_streak }}</span></div>
+    <div class="stat-card"><span class="stat-label">Max Loss Streak</span><span class="stat-value">{{ stats.max_loss_streak }}</span></div>
+</div>
+
+<div class="charts-grid">
+    <div class="chart-card"><h3>Equity Curve</h3><canvas id="equityCurveChart"></canvas></div>
+    <div class="chart-card"><h3>Daily P&amp;L</h3><canvas id="dailyPnlChart"></canvas></div>
+    <div class="chart-card"><h3>Weekly P&amp;L</h3><canvas id="weeklyPnlChart"></canvas></div>
+    <div class="chart-card"><h3>Monthly P&amp;L</h3><canvas id="monthlyPnlChart"></canvas></div>
+    <div class="chart-card"><h3>Wins vs Losses</h3><canvas id="winLossChart"></canvas></div>
+    <div class="chart-card"><h3>P&amp;L by Symbol</h3><canvas id="pnlBySymbolChart"></canvas></div>
+    <div class="chart-card"><h3>P&amp;L by Strategy</h3><canvas id="pnlByStrategyChart"></canvas></div>
+    <div class="chart-card"><h3>P&amp;L by Session</h3><canvas id="pnlBySessionChart"></canvas></div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+window.ANALYTICS_DATA = {
+    equityLabels: {{ equity_labels|tojson }},
+    equityValues: {{ equity_values|tojson }},
+    dailyLabels: {{ daily_pnl.keys()|list|tojson }},
+    dailyValues: {{ daily_pnl.values()|list|tojson }},
+    weeklyLabels: {{ weekly_pnl.keys()|list|tojson }},
+    weeklyValues: {{ weekly_pnl.values()|list|tojson }},
+    monthlyLabels: {{ monthly_pnl.keys()|list|tojson }},
+    monthlyValues: {{ monthly_pnl.values()|list|tojson }},
+    winLossLabels: {{ wins_losses.keys()|list|tojson }},
+    winLossValues: {{ wins_losses.values()|list|tojson }},
+    symbolLabels: {{ pnl_by_symbol.keys()|list|tojson }},
+    symbolValues: {{ pnl_by_symbol.values()|list|tojson }},
+    strategyLabels: {{ pnl_by_strategy.keys()|list|tojson }},
+    strategyValues: {{ pnl_by_strategy.values()|list|tojson }},
+    sessionLabels: {{ pnl_by_session.keys()|list|tojson }},
+    sessionValues: {{ pnl_by_session.values()|list|tojson }}
+};
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    if (window.TradeVaultCharts) {
+        window.TradeVaultCharts.renderAnalyticsCharts(window.ANALYTICS_DATA);
+    }
+});
+</script>
+{% endblock %}

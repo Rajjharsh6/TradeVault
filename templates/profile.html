@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Profile - TradeVault{% endblock %}
+{% block page_title %}Profile{% endblock %}
+{% block content %}
+
+<div class="panel">
+    <div class="profile-header">
+        <span class="user-avatar user-avatar-lg">{{ (user.email or "U")[0]|upper if user else "U" }}</span>
+        <div>
+            <h2>{{ user.email if user else "" }}</h2>
+            <p class="muted">Member since {{ profile.created_at[:10] if profile.created_at else "-" }}</p>
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <span class="stat-label">Total Trades</span>
+            <span class="stat-value">{{ stats.total_trades }}</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Total P&amp;L</span>
+            <span class="stat-value {{ 'pnl-positive' if stats.net_pnl >= 0 else 'pnl-negative' }}">{{ stats.net_pnl }}</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Win Rate</span>
+            <span class="stat-value">{{ stats.win_rate }}%</span>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

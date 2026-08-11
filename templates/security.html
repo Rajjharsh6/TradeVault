@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Security - TradeVault{% endblock %}
+{% block page_title %}Security{% endblock %}
+{% block content %}
+
+<div class="panel">
+    <div class="form-section-title">Change Password</div>
+    <form method="POST" action="{{ url_for('security') }}" class="trade-form">
+        <div class="form-grid form-grid-1">
+            <div class="form-group">
+                <label for="new_password">New Password</label>
+                <input type="password" id="new_password" name="new_password" placeholder="At least 8 characters" required minlength="8">
+            </div>
+            <div class="form-group">
+                <label for="confirm_password">Confirm New Password</label>
+                <input type="password" id="confirm_password" name="confirm_password" placeholder="Repeat new password" required minlength="8">
+            </div>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Update Password</button>
+        </div>
+    </form>
+
+    <div class="form-section-title">Sessions</div>
+    <p class="muted">Logging out will end your current session on this device.</p>
+    <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
+
+    <div class="form-section-title">Security Information</div>
+    <ul class="security-list">
+        <li>Your password is never stored or visible to TradeVault — it is securely hashed by Supabase Auth.</li>
+        <li>All trade data is protected by Row Level Security, so only you can access your trades.</li>
+        <li>Server secrets are never exposed to the browser.</li>
+    </ul>
+</div>
+
+{% endblock %}
